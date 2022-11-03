@@ -65,7 +65,8 @@ done
 # Install Rust and Cargo
 if ! command -v -- "cargo" > /dev/null 2>&1; then
   echo "-----> Installing Rust and Cargo"
-  curl https://sh.rustup.rs -sSf | sh -s -- -y
+  # curl https://sh.rustup.rs -sSf | sh -s -- -y
+  sh -c "$(curl -sSf https://sh.rustup.rs)" -- -y
 fi
 
 # Install git-delta
