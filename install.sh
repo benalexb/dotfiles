@@ -20,6 +20,7 @@ backup() {
 # Install Oh My Zsh
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
   echo "-----> Installing Oh My Zsh"
+  # TODO: can this be done via package manager?
   sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
 
@@ -65,15 +66,15 @@ done
 # Install Rust and Cargo
 if ! command -v -- "cargo" > /dev/null 2>&1; then
   echo "-----> Installing Rust and Cargo"
-  # curl https://sh.rustup.rs -sSf | sh -s -- -y
-  # sh -c "$(curl -sSf https://sh.rustup.rs)" -- -y
+  # TODO: can this be done via package manager?
+  curl https://sh.rustup.rs -sSf | sh -s -- -y
 fi
 
 # Install git-delta
-# if ! command -v -- "delta" > /dev/null 2>&1; then
+if ! command -v -- "delta" > /dev/null 2>&1 || [ "$SPIN" ]; then
   echo "-----> Installing git-delta"
   cargo install git-delta
-# fi
+fi
 
 # Git config
 echo "-----> Setting git config"
