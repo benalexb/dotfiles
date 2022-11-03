@@ -64,16 +64,20 @@ for name in zshrc aliases p10k.zsh; do
 done
 
 # Install Rust and Cargo
-if ! command -v -- "cargo" > /dev/null 2>&1; then
+if ( ! command -v -- "cargo" > /dev/null; ); then
   echo "-----> Installing Rust and Cargo"
   # TODO: can this be done via package manager?
   curl https://sh.rustup.rs -sSf | sh -s -- -y
+else
+  echo "-----> Skip install -> rust and cardo already installed"
 fi
 
 # Install git-delta
-if ! command -v -- "delta" > /dev/null 2>&1 || [ "$SPIN" ]; then
+if ( ! command -v -- "delta" > /dev/null; ); then
   echo "-----> Installing git-delta"
   cargo install git-delta
+else
+  echo "-----> Skip install -> git-delta already installed"
 fi
 
 # Git config
@@ -84,16 +88,8 @@ git config --global core.editor "code -w"
 git config --global core.pager "delta"
 git config --global init.defaultbranch "master"
 git config --global interactive.difffilter "delta --color-only --features=interactive"
-git config --global delta.features "decorations"
-git config --global delta.side-by-side "true"
-git config --global delta.interactive.keep-plus-minus-markers "false"
-git config --global delta.decorations.commit-decoration-style "blue ol"
-git config --global delta.decorations.commit-style "raw"
-git config --global delta.decorations.file-style "omit"
-git config --global delta.decorations.hunk-header-decoration-style "blue box"
-git config --global delta.decorations.hunk-header-file-style "red"
-git config --global delta.decorations.hunk-header-line-number-style "#067a00"
-git config --global delta.decorations.hunk-header-style "file line-number syntax"
+git config --global --add include.path "~/dotfiles/delta.gitconfig"
+git config --global --add include.path "~/dotfiles/delta-themes.gitconfig"
 git config --global --list
 
 exec zsh
