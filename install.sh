@@ -70,10 +70,10 @@ if ! command -v -- "cargo" > /dev/null 2>&1; then
 fi
 
 # Install git-delta
-if ! command -v -- "delta" > /dev/null 2>&1; then
+# if ! command -v -- "delta" > /dev/null 2>&1; then
   echo "-----> Installing git-delta"
   cargo install git-delta
-fi
+# fi
 
 # Git config
 echo "-----> Setting git config"
