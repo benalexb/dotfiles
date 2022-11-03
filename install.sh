@@ -73,7 +73,7 @@ else
 fi
 
 # Install git-delta
-if ( ! command -v -- "delta" > /dev/null; ) || [ "$SPIN" ]; then
+if ( ! command -v -- "delta" > /dev/null; ); then
   echo "-----> Installing git-delta"
   cargo install git-delta
 else
