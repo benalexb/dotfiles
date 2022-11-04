@@ -1,30 +1,3 @@
-symlink() {
-  file=$1
-  link=$2
-  if [ ! -e "$link" ]; then # link doesn't exist
-    echo "-----> Symlinking your new $link"
-    ln -fs $file $link
-  fi
-}
-
-backup() {
-  target=$1
-  if [ -e "$target" ]; then # file exists
-    if [ ! -L "$target" ]; then # file is not a symbolic link
-      mv "$target" "$target.backup"
-      echo "-----> Moved your old $target config file to $target.backup"
-    fi
-  fi
-}
-
-isSpin() {
-  if [ "$SPIN" ]; then
-    return 1
-  else
-    return 0
-  fi
-}
-
 # Check if NodeJS is installed
 if ( command -v -- "node" > /dev/null; ) then
   echo "-----> NodeJS is already installed, awesome!"
@@ -41,6 +14,25 @@ fi
 
 echo "-----> Executing setup.mjs"
 zx ./setup.mjs
+
+# symlink() {
+#   file=$1
+#   link=$2
+#   if [ ! -e "$link" ]; then # link doesn't exist
+#     echo "-----> Symlinking your new $link"
+#     ln -fs $file $link
+#   fi
+# }
+
+# backup() {
+#   target=$1
+#   if [ -e "$target" ]; then # file exists
+#     if [ ! -L "$target" ]; then # file is not a symbolic link
+#       mv "$target" "$target.backup"
+#       echo "-----> Moved your old $target config file to $target.backup"
+#     fi
+#   fi
+# }
 
 # # Install Oh My Zsh
 # if [ ! -d "$HOME/.oh-my-zsh" ]; then

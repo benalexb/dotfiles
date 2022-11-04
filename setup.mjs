@@ -14,6 +14,7 @@ const backup = (file) => {
 
 const runTasks = async () => {
   const isSpin = !!process.env.SPIN
+
   try {
     console.log(`isSpin: ${isSpin}`)
     process.exit(0)
