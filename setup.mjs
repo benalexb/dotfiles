@@ -150,20 +150,13 @@ const installGitDelta = async () => {
     // We do not want to throw when the command doesn't exist, but rather, take action on it.
     const hasDelta = which.sync('delta', { nothrow: true })
 
-    if (hasDelta) {
+    if (hasDelta || SPIN) {
       console.log(warningText('Skipping git-delta, already installed!'))
       return
     }
 
-    // bbarreto_debug
-    if (SPIN) {
-      const nixenvWhich = which.sync('nix-env', {nothrow: true})
-      console.log('[installGitDelta] nixenvWhich', nixenvWhich)
-      console.log('process.env.PATH', process.env.PATH)
-    }
-
     const installMessage = '-> Installing git-delta... '
-    const installCommand = SPIN ? 'nix-env -iA nixpkgs.delta' : 'brew install git-delta --quiet'
+    const installCommand = 'brew install git-delta --quiet'
     await spinner(infoText(installMessage), () => $`${installCommand}`)
     console.log(infoText(installMessage), positiveText('Done'))
   } catch (error) {
