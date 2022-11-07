@@ -155,6 +155,12 @@ const installGitDelta = async () => {
       return
     }
 
+    // bbarreto_debug
+    if (SPIN) {
+      const nixenvWhich = which.sync('nix-env')
+      console.log('nixenvWhich', nixenvWhich)
+    }
+
     const installMessage = '-> Installing git-delta... '
     const installCommand = SPIN ? 'nix-env -iA nixpkgs.delta' : 'brew install git-delta --quiet'
     await spinner(infoText(installMessage), () => $`${installCommand}`)
