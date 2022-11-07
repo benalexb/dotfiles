@@ -157,7 +157,7 @@ const installGitDelta = async () => {
 
     // bbarreto_debug
     if (SPIN) {
-      const nixenvWhich = which.sync('nix-env')
+      const nixenvWhich = which.sync('nix-env', {nothrow: true})
       console.log('[installGitDelta] nixenvWhich', nixenvWhich)
       console.log('process.env.PATH', process.env.PATH)
     }
