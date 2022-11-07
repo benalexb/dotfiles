@@ -5,10 +5,10 @@ if ( ! command -v -- "node" > /dev/null; ) then
 fi
 
 # Make sure we have ZX
-if ( ! command -v -- "zx" > /dev/null; ) then
-  echo "-----> Installing ZX"
-  npm install -g --silent zx
-fi
+# if ( ! command -v -- "zx" > /dev/null; ) then
+#   echo "-----> Installing ZX"
+#   npm install -g --silent zx
+# fi
 
 echo "-----> Executing setup.mjs"
-zx ./setup.mjs
+npx zx ./setup.mjs

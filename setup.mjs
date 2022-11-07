@@ -223,6 +223,7 @@ const runTasks = async () => {
   if (!isSpin) {
     // await $`exec zsh`
   }
+  process.exit(0)
 }
 
 runTasks()

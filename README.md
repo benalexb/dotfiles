@@ -1,11 +1,10 @@
 # dotfiles
 
 ## Usage
-Checkout this repo to your (OSX or Linux) home directory and run
+Checkout this repo to your (OSX or Linux) home directory. **IMPORTANT** The script assumes this repository has been checked out to `~/dotfiles`.
 ```
 sh ./install.sh
 ```
-**IMPORTANT:** The script assumes this repository has been checked out to `~/dotfiles`.
 
 The following will be installed and set up
 
