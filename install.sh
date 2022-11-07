@@ -10,5 +10,8 @@ fi
 #   npm install -g --silent zx
 # fi
 
+echo "-----> Installing dependencies"
+npm i --silent
+
 echo "-----> Executing setup.mjs"
 npx zx ./setup.mjs

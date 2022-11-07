@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/benalexb/dotfiles#readme",
   "devDependencies": {
-    "eslint": "^8.27.0",
+    "eslint": "^8.27.0"
+  },
+  "dependencies": {
     "zx": "^7.1.1"
   }
 }
