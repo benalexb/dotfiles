@@ -146,7 +146,6 @@ const installCargo = async () => {
     // Using which.sync because async will not recognize nothrow: true (maybe a bug?)
     // We do not want to throw when the command doesn't exist, but rather, take action on it.
     const hasCargo = which.sync('cargo', { nothrow: true })
-    console.log(`[installCargo] hasCargo`, hasCargo) // bbarreto_debug
     if (!hasCargo) {
       const installMessage = '-> Installing Rust and Cargo... '
       await spinner(infoText(installMessage), () => $`curl https://sh.rustup.rs -sSf | sh -s -- -y`)
@@ -166,6 +165,7 @@ const installGitDelta = async () => {
     const hasDelta = which.sync('delta', { nothrow: true })
     const hasCargo = which.sync('cargo', { nothrow: true })
     console.log(`[installGitDelta] hasDelta`, hasDelta) // bbarreto_debug
+    console.log(`[installGitDelta] hasCargo`, hasCargo) // bbarreto_debug
     if (!hasDelta && hasCargo) {
       const installMessage = '-> Installing git-delta... '
       await spinner(infoText(installMessage), () => $`cargo install git-delta --quiet`)
