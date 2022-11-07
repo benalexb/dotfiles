@@ -143,7 +143,7 @@ const setupConfigFiles = async () => {
   try {
     for (const fileName of CONFIG_FILES) {
       const target = path.join(os.homedir(), fileName)
-      const file = path.join(os.homedir(), 'dotfiles', fileName)
+      const file = path.join(os.homedir(), 'dotfiles', 'config', fileName)
       await backup(target)
       await symlink(file, target)
     }
