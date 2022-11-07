@@ -165,7 +165,7 @@ const installGitDelta = async () => {
     // We do not want to throw when the command doesn't exist, but rather, take action on it.
     const hasDelta = which.sync('delta', { nothrow: true })
     const hasCargo = which.sync('cargo', { nothrow: true })
-    const cargoExists = fs.pathExists('/home/spin/.cargo/bin/cargo')
+    const cargoExists = await fs.pathExists('/home/spin/.cargo/bin/cargo')
 
     console.log(`[installGitDelta] hasDelta`, hasDelta) // bbarreto_debug
     console.log(`[installGitDelta] hasCargo`, hasCargo) // bbarreto_debug
