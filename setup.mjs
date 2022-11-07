@@ -2,6 +2,7 @@
 
 import { spinner } from 'zx/experimental'
 
+const SPIN = !!process.env.SPIN
 const GIT_USER_NAME = 'Benjamin Barreto'
 const GIT_USER_EMAIL = 'benjamin.barreto@shopify.com'
 const CONFIG_FILES = [
@@ -164,11 +165,16 @@ const installGitDelta = async () => {
     // We do not want to throw when the command doesn't exist, but rather, take action on it.
     const hasDelta = which.sync('delta', { nothrow: true })
     const hasCargo = which.sync('cargo', { nothrow: true })
+    const cargoExists = fs.pathExists('/home/spin/.cargo/bin/cargo')
+
     console.log(`[installGitDelta] hasDelta`, hasDelta) // bbarreto_debug
     console.log(`[installGitDelta] hasCargo`, hasCargo) // bbarreto_debug
-    if (!hasDelta && hasCargo) {
+    console.log(`[installGitDelta] cargoExists`, cargoExists) // bbarreto_debug
+
+    if (!hasDelta && (hasCargo || cargoExists)) {
       const installMessage = '-> Installing git-delta... '
-      await spinner(infoText(installMessage), () => $`cargo install git-delta --quiet`)
+      const cargoPath = SPIN ? '/home/spin/.cargo/bin/cargo' : 'cargo'
+      await spinner(infoText(installMessage), () => $`${cargoPath} install git-delta --quiet`)
       console.log(infoText(installMessage), positiveText('Done'))
     }
   } catch (error) {
@@ -214,8 +220,6 @@ const setupGitConfig = async () => {
 }
 
 const runTasks = async () => {
-  const isSpin = !!process.env.SPIN
-
   await installOhmyzsh()
   await installP10K()
   await installZSHPlugins()
@@ -224,7 +228,7 @@ const runTasks = async () => {
   await setupConfigFiles()
   await setupGitConfig()
 
-  if (!isSpin) {
+  if (!SPIN) {
     // await $`exec zsh`
   }
   process.exit(0)
