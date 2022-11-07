@@ -1,10 +1,14 @@
 # dotfiles
 
 ## Usage
-Within OSX or Linux, run
+Checkout this repo to your (OSX or Linux) home directory and run
 ```
 sh ./install.sh
 ```
+**IMPORTANT:** The script assumes this repository has been checked out to `~/dotfiles`.
+
+The following will be installed and set up
+
 1. [oh-my-zsh](https://ohmyz.sh/)
 2. [powerlevel10k](https://github.com/romkatv/powerlevel10k)
 3. [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting)
