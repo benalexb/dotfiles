@@ -73,14 +73,15 @@ const installOhmyzsh = async () => {
 
     if (exists) {
       console.log(warningText('Skipping oh-my-zsh, already installed!'))
-    } else {
-      const installMessage = '-> Installing oh-my-zsh... '
-      await spinner(
-        infoText(installMessage),
-        () => $`sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"`
-      )
-      console.log(infoText(installMessage), positiveText('Done'))
+      return
     }
+
+    const installMessage = '-> Installing oh-my-zsh... '
+    await spinner(
+      infoText(installMessage),
+      () => $`sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"`
+    )
+    console.log(infoText(installMessage), positiveText('Done'))
   } catch (error) {
     reportError('Problem installing oh-my-zsh', error)
     process.exit(1)
@@ -94,14 +95,15 @@ const installP10K = async () => {
 
     if (exists) {
       console.log(warningText('Skipping powerlevel10k, already installed!'))
-    } else {
-      const installMessage = '-> Installing powerlevel10k... '
-      await spinner(
-        infoText(installMessage),
-        () => $`git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${p10kPath}`
-      )
-      console.log(infoText(installMessage), positiveText('Done'))
+      return
     }
+
+    const installMessage = '-> Installing powerlevel10k... '
+    await spinner(
+      infoText(installMessage),
+      () => $`git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${p10kPath}`
+    )
+    console.log(infoText(installMessage), positiveText('Done'))
   } catch (error) {
     reportError('Problem installing powerlevel10k', error)
     process.exit(1)
@@ -142,41 +144,26 @@ const installZSHPlugins = async () => {
   }
 }
 
-const installCargo = async () => {
-  try {
-    // Using which.sync because async will not recognize nothrow: true (maybe a bug?)
-    // We do not want to throw when the command doesn't exist, but rather, take action on it.
-    const hasCargo = which.sync('cargo', { nothrow: true })
-    const cargoExistsInSpin = await fs.pathExists('/home/spin/.cargo/bin/cargo')
-
-    if (!hasCargo || (SPIN && !cargoExistsInSpin)) {
-      const installMessage = '-> Installing Rust and Cargo... '
-      await spinner(infoText(installMessage), () => $`curl https://sh.rustup.rs -sSf | sh -s -- -y`)
-      await spinner(infoText(installMessage), () => $`source "$HOME/.cargo/env"`)
-      console.log(infoText(installMessage), positiveText('Done'))
-    }
-  } catch (error) {
-    reportError('Problem installing cargo', error)
-    process.exit(1)
-  }
-}
-
 const installGitDelta = async () => {
   try {
     // Using which.sync because async will not recognize nothrow: true (maybe a bug?)
     // We do not want to throw when the command doesn't exist, but rather, take action on it.
     const hasDelta = which.sync('delta', { nothrow: true })
-    const hasCargo = which.sync('cargo', { nothrow: true })
 
-    const cargoPath = 'cargo'
-    const spinCargoPath = '/home/spin/.cargo/bin/cargo'
-    const cargoExistsInSpin = await fs.pathExists(spinCargoPath)
-
-    if (!hasDelta && (hasCargo || cargoExistsInSpin)) {
-      const installMessage = '-> Installing git-delta... '
-      await spinner(infoText(installMessage), () => $`${SPIN ? spinCargoPath : cargoPath} install git-delta --quiet`)
-      console.log(infoText(installMessage), positiveText('Done'))
+    if (hasDelta) {
+      console.log(warningText('Skipping git-delta, already installed!'))
+      return
     }
+
+    const installMessage = '-> Installing git-delta... '
+    if (SPIN) {
+      // On Spin, we use nix, much quicker!
+      await $`nix-env -iA nixpkgs.delta`
+    } else {
+      // On OSX, we use brew
+      await spinner(infoText(installMessage), () => $`brew install git-delta --quiet`)
+    }
+    console.log(infoText(installMessage), positiveText('Done'))
   } catch (error) {
     reportError('Problem installing git-delta', error)
     process.exit(1)
@@ -223,7 +210,6 @@ const runTasks = async () => {
   await installOhmyzsh()
   await installP10K()
   await installZSHPlugins()
-  await installCargo()
   await installGitDelta()
   await setupConfigFiles()
   await setupGitConfig()
