@@ -156,9 +156,7 @@ const installGitDelta = async () => {
     }
 
     const installMessage = '-> Installing git-delta... '
-    const installCommand = SPIN
-      ? '/home/spin/.nix-profile/bin/nix-env -iA nixpkgs.delta'
-      : 'brew install git-delta --quiet'
+    const installCommand = SPIN ? 'nix-env -iA nixpkgs.delta' : 'brew install git-delta --quiet'
     await spinner(infoText(installMessage), () => $`${installCommand}`)
     console.log(infoText(installMessage), positiveText('Done'))
   } catch (error) {
