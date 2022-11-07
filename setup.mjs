@@ -156,13 +156,10 @@ const installGitDelta = async () => {
     }
 
     const installMessage = '-> Installing git-delta... '
-    if (SPIN) {
-      // On Spin, we use nix, much quicker!
-      await $`nix-env -iA nixpkgs.delta`
-    } else {
-      // On OSX, we use brew
-      await spinner(infoText(installMessage), () => $`brew install git-delta --quiet`)
-    }
+    const installCommand = SPIN
+      ? '/home/spin/.nix-profile/bin/nix-env -iA nixpkgs.delta'
+      : 'brew install git-delta --quiet'
+    await spinner(infoText(installMessage), () => $`${installCommand}`)
     console.log(infoText(installMessage), positiveText('Done'))
   } catch (error) {
     reportError('Problem installing git-delta', error)
