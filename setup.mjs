@@ -123,13 +123,13 @@ const installZSHPlugins = async () => {
     const pluginsDir = path.join(os.homedir(), '.oh-my-zsh', 'custom', 'plugins')
     await fs.ensureDir(pluginsDir)
 
-    installPlugin(
+    await installPlugin(
       'zsh-syntax-highlighting',
       path.join(pluginsDir, 'zsh-syntax-highlighting'),
       'https://github.com/zsh-users/zsh-syntax-highlighting'
     )
 
-    installPlugin(
+    await installPlugin(
       'zsh-autosuggestions',
       path.join(pluginsDir, 'zsh-autosuggestions'),
       'https://github.com/zsh-users/zsh-autosuggestions'
@@ -146,10 +146,11 @@ const installCargo = async () => {
     // Using which.sync because async will not recognize nothrow: true (maybe a bug?)
     // We do not want to throw when the command doesn't exist, but rather, take action on it.
     const hasCargo = which.sync('cargo', { nothrow: true })
+    console.log(`[installCargo] hasCargo`, hasCargo) // bbarreto_debug
     if (!hasCargo) {
-      const installMessage = '-> Installing Rust and Cargo... '
-      await spinner(infoText(installMessage), () => $`curl https://sh.rustup.rs -sSf | sh -s -- -y`)
-      console.log(infoText(installMessage), positiveText('Done'))
+      // const installMessage = '-> Installing Rust and Cargo... '
+      // await spinner(infoText(installMessage), () => $`curl https://sh.rustup.rs -sSf | sh -s -- -y`)
+      // console.log(infoText(installMessage), positiveText('Done'))
     }
   } catch (error) {
     reportError('Problem installing cargo', error)
@@ -162,10 +163,11 @@ const installGitDelta = async () => {
     // Using which.sync because async will not recognize nothrow: true (maybe a bug?)
     // We do not want to throw when the command doesn't exist, but rather, take action on it.
     const hasDelta = which.sync('delta', { nothrow: true })
+    console.log(`[installGitDelta] hasDelta`, hasDelta) // bbarreto_debug
     if (!hasDelta) {
-      const installMessage = '-> Installing git-delta... '
-      await spinner(infoText(installMessage), () => $`cargo install git-delta --quiet`)
-      console.log(infoText(installMessage), positiveText('Done'))
+      // const installMessage = '-> Installing git-delta... '
+      // await spinner(infoText(installMessage), () => $`cargo install git-delta --quiet`)
+      // console.log(infoText(installMessage), positiveText('Done'))
     }
   } catch (error) {
     reportError('Problem installing cargo', error)
