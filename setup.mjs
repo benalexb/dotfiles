@@ -17,7 +17,7 @@ const infoText = chalk.bold.white
 const positiveText = chalk.bold.green
 
 // Set verbosity to silent. Default is true. Verbosity may be useful for development.
-$.verbose = true
+$.verbose = false
 
 const reportError = (message, error = new Error()) => {
   console.log(errorText(message))
@@ -165,16 +165,14 @@ const installGitDelta = async () => {
     // We do not want to throw when the command doesn't exist, but rather, take action on it.
     const hasDelta = which.sync('delta', { nothrow: true })
     const hasCargo = which.sync('cargo', { nothrow: true })
-    const cargoExists = await fs.pathExists('/home/spin/.cargo/bin/cargo')
 
-    console.log(`[installGitDelta] hasDelta`, hasDelta) // bbarreto_debug
-    console.log(`[installGitDelta] hasCargo`, hasCargo) // bbarreto_debug
-    console.log(`[installGitDelta] cargoExists`, cargoExists) // bbarreto_debug
+    const cargoPath = 'cargo'
+    const spinCargoPath = '/home/spin/.cargo/bin/cargo'
+    const cargoExistsInSpin = await fs.pathExists(spinCargoPath)
 
-    if (!hasDelta && (hasCargo || cargoExists)) {
+    if (!hasDelta && (hasCargo || cargoExistsInSpin)) {
       const installMessage = '-> Installing git-delta... '
-      const cargoPath = SPIN ? '/home/spin/.cargo/bin/cargo' : 'cargo'
-      await spinner(infoText(installMessage), () => $`${cargoPath} install git-delta --quiet`)
+      await spinner(infoText(installMessage), () => $`${SPIN ? spinCargoPath : cargoPath} install git-delta --quiet`)
       console.log(infoText(installMessage), positiveText('Done'))
     }
   } catch (error) {
