@@ -4,12 +4,6 @@ if ( ! command -v -- "node" > /dev/null; ) then
   exit 127 # command not found
 fi
 
-# Make sure we have ZX
-# if ( ! command -v -- "zx" > /dev/null; ) then
-#   echo "-----> Installing ZX"
-#   npm install -g --silent zx
-# fi
-
 echo "-----> Installing dependencies"
 npm i --silent
 

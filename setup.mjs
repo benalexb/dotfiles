@@ -147,7 +147,9 @@ const installCargo = async () => {
     // Using which.sync because async will not recognize nothrow: true (maybe a bug?)
     // We do not want to throw when the command doesn't exist, but rather, take action on it.
     const hasCargo = which.sync('cargo', { nothrow: true })
-    if (!hasCargo) {
+    const cargoExistsInSpin = await fs.pathExists('/home/spin/.cargo/bin/cargo')
+
+    if (!hasCargo || (SPIN && !cargoExistsInSpin)) {
       const installMessage = '-> Installing Rust and Cargo... '
       await spinner(infoText(installMessage), () => $`curl https://sh.rustup.rs -sSf | sh -s -- -y`)
       await spinner(infoText(installMessage), () => $`source "$HOME/.cargo/env"`)
