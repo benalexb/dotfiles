@@ -1,7 +1,7 @@
 # dotfiles
 
 ## Usage
-Checkout this repo to your (OSX or Linux) home directory. **IMPORTANT** The script assumes this repository has been checked out to `~/dotfiles`.
+Checkout this repo to your (OSX or Linux) home directory. **IMPORTANT** the script assumes this repository has been checked out to `~/dotfiles`.
 ```
 sh ./install.sh
 ```
@@ -16,11 +16,5 @@ The following will be installed and set up
 6. Personal aliases
 7. Git configs
 
-### Pre-reqs
+### Required
 * nodejs >= v16
-
-## Development
-It is not necessary to install any dependencies for development, but if you would like a linter and some dev ergonomics while working on this repository, run
-```
-npm install
-```
