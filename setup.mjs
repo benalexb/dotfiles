@@ -16,7 +16,7 @@ const infoText = chalk.bold.white
 const positiveText = chalk.bold.green
 
 // Set verbosity to silent. Default is true. Verbosity may be useful for development.
-$.verbose = false
+$.verbose = true
 
 const reportError = (message, error = new Error()) => {
   console.log(errorText(message))
@@ -148,9 +148,10 @@ const installCargo = async () => {
     const hasCargo = which.sync('cargo', { nothrow: true })
     console.log(`[installCargo] hasCargo`, hasCargo) // bbarreto_debug
     if (!hasCargo) {
-      // const installMessage = '-> Installing Rust and Cargo... '
-      // await spinner(infoText(installMessage), () => $`curl https://sh.rustup.rs -sSf | sh -s -- -y`)
-      // console.log(infoText(installMessage), positiveText('Done'))
+      const installMessage = '-> Installing Rust and Cargo... '
+      await spinner(infoText(installMessage), () => $`curl https://sh.rustup.rs -sSf | sh -s -- -y`)
+      await spinner(infoText(installMessage), () => $`source "$HOME/.cargo/env"`)
+      console.log(infoText(installMessage), positiveText('Done'))
     }
   } catch (error) {
     reportError('Problem installing cargo', error)
