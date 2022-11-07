@@ -164,14 +164,15 @@ const installGitDelta = async () => {
     // Using which.sync because async will not recognize nothrow: true (maybe a bug?)
     // We do not want to throw when the command doesn't exist, but rather, take action on it.
     const hasDelta = which.sync('delta', { nothrow: true })
+    const hasCargo = which.sync('cargo', { nothrow: true })
     console.log(`[installGitDelta] hasDelta`, hasDelta) // bbarreto_debug
-    if (!hasDelta) {
+    if (!hasDelta && hasCargo) {
       const installMessage = '-> Installing git-delta... '
       await spinner(infoText(installMessage), () => $`cargo install git-delta --quiet`)
       console.log(infoText(installMessage), positiveText('Done'))
     }
   } catch (error) {
-    reportError('Problem installing cargo', error)
+    reportError('Problem installing git-delta', error)
     process.exit(1)
   }
 }
