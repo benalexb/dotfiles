@@ -1,5 +1,7 @@
 #!/usr/bin/env zx
 
+import { spinner } from 'zx/experimental'
+
 const CONFIG_FILES = [
   '.zshrc',
   '.aliases',
@@ -9,6 +11,7 @@ const CONFIG_FILES = [
 const errorText = chalk.bold.red
 const warningText = chalk.bold.yellow
 const infoText = chalk.bold.white
+const positiveText = chalk.bold.green
 
 // Set verbosity to silent. Default is true. Verbosity may be useful for development.
 $.verbose = false
@@ -36,7 +39,7 @@ const backup = async (file) => {
 
     // If the file exists and is not a symbolic link
     if (exists && !backupFileStats.isSymbolicLink()) {
-      $`mv ${file} ${file}.backup`
+      await $`mv ${file} ${file}.backup`
       console.log(infoText(`-> Moved your old ${file} to ${file}.backup`))
     }
   } catch (error) {
@@ -52,7 +55,7 @@ const symlink = async (file, target) => {
 
     // If the file exists, but the target link does not
     if (fileExists && !targetExists) {
-      $`ln -fs ${file} ${target}`
+      await $`ln -fs ${file} ${target}`
       console.log(infoText(`-> Symlinked ${file} to ${target}`))
     }
   } catch (error) {
@@ -68,8 +71,12 @@ const installOhmyzsh = async () => {
     if (exists) {
       console.log(warningText('Skipping oh-my-zsh, already installed!'))
     } else {
-      console.log(infoText('-> Installing oh-my-zsh'))
-      await $`sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"`
+      const installMessage = '-> Installing oh-my-zsh... '
+      await spinner(
+        infoText(installMessage),
+        () => $`sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"`
+      )
+      console.log(infoText(installMessage), positiveText('Done'))
     }
   } catch (error) {
     reportError('Problem installing oh-my-zsh', error)
@@ -85,8 +92,12 @@ const installP10K = async () => {
     if (exists) {
       console.log(warningText('Skipping powerlevel10k, already installed!'))
     } else {
-      console.log(infoText('-> Installing powerlevel10k'))
-      await $`git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${p10kPath}`
+      const installMessage = '-> Installing powerlevel10k... '
+      await spinner(
+        infoText(installMessage),
+        () => $`git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${p10kPath}`
+      )
+      console.log(infoText(installMessage), positiveText('Done'))
     }
   } catch (error) {
     reportError('Problem installing powerlevel10k', error)
@@ -99,8 +110,9 @@ const installPlugin = async (pluginName, pluginDir, pluginRepo) => {
   if (pluginExists) {
     console.log(warningText(`Skipping ${pluginName}, already installed!`))
   } else {
-    console.log(infoText(`-> Installing ${pluginName}`))
-    $`git clone ${pluginRepo} ${pluginDir}`
+    const installMessage = `-> Installing ${pluginName}... `
+    await spinner(infoText(installMessage), () => $`git clone ${pluginRepo} ${pluginDir}`)
+    console.log(infoText(installMessage), positiveText('Done'))
   }
 }
 
@@ -141,6 +153,38 @@ const setupConfigFiles = async () => {
   }
 }
 
+const installCargo = async () => {
+  try {
+    // Using which.sync because async will not recognize nothrow: true (maybe a bug?)
+    // We do not want to throw when the command doesn't exist, but rather, take action on it.
+    const hasCargo = which.sync('cargo', { nothrow: true })
+    if (!hasCargo) {
+      const installMessage = '-> Installing Rust and Cargo... '
+      await spinner(infoText(installMessage), () => $`curl https://sh.rustup.rs -sSf | sh -s -- -y`)
+      console.log(infoText(installMessage), positiveText('Done'))
+    }
+  } catch (error) {
+    reportError('Problem installing cargo', error)
+    process.exit(1)
+  }
+}
+
+const installGitDelta = async () => {
+  try {
+    // Using which.sync because async will not recognize nothrow: true (maybe a bug?)
+    // We do not want to throw when the command doesn't exist, but rather, take action on it.
+    const hasDelta = which.sync('delta', { nothrow: true })
+    if (!hasDelta) {
+      const installMessage = '-> Installing git-delta... '
+      await spinner(infoText(installMessage), () => $`cargo install git-delta --quiet`)
+      console.log(infoText(installMessage), positiveText('Done'))
+    }
+  } catch (error) {
+    reportError('Problem installing cargo', error)
+    process.exit(1)
+  }
+}
+
 const runTasks = async () => {
   // const isSpin = !!process.env.SPIN
 
@@ -148,6 +192,8 @@ const runTasks = async () => {
   await installP10K()
   await installZSHPlugins()
   await setupConfigFiles()
+  await installCargo()
+  await installGitDelta()
 }
 
 runTasks()

@@ -9,6 +9,7 @@ module.exports = {
         "fs": true,
         "os": true,
         "path": true,
+        "which": true,
         "$": true
     },
     "extends": "eslint:recommended",
