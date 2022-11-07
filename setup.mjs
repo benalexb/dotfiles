@@ -166,9 +166,9 @@ const installGitDelta = async () => {
     const hasDelta = which.sync('delta', { nothrow: true })
     console.log(`[installGitDelta] hasDelta`, hasDelta) // bbarreto_debug
     if (!hasDelta) {
-      // const installMessage = '-> Installing git-delta... '
-      // await spinner(infoText(installMessage), () => $`cargo install git-delta --quiet`)
-      // console.log(infoText(installMessage), positiveText('Done'))
+      const installMessage = '-> Installing git-delta... '
+      await spinner(infoText(installMessage), () => $`cargo install git-delta --quiet`)
+      console.log(infoText(installMessage), positiveText('Done'))
     }
   } catch (error) {
     reportError('Problem installing cargo', error)
