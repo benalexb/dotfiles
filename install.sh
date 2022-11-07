@@ -1,8 +1,6 @@
 # Check if NodeJS is installed
-if ( command -v -- "node" > /dev/null; ) then
-  echo "-----> NodeJS is already installed, awesome!"
-else
-  echo "-----> Missing NodeJS ☹️"
+if ( ! command -v -- "node" > /dev/null; ) then
+  echo "-----> Missing NodeJS :("
   exit 127 # command not found
 fi
 

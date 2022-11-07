@@ -8,17 +8,17 @@ const reportError = (message, error = new Error()) => {
   console.error(error)
 }
 
-const symlink = (file, target) => {
-  // Check if file and target exist
-  // Only create symlink if file and target both exist.
-  // Should we fail gracefully or exit the script with an error?
-}
+// const symlink = (file, target) => {
+//   // Check if file and target exist
+//   // Only create symlink if file and target both exist.
+//   // Should we fail gracefully or exit the script with an error?
+// }
 
-const backup = (file) => {
-  // Check if the file to be backed up actually exists
-  // Only back it up if it actually exists
-  // Should we fail gracefully or exit the script with an error?
-}
+// const backup = (file) => {
+//   // Check if the file to be backed up actually exists
+//   // Only back it up if it actually exists
+//   // Should we fail gracefully or exit the script with an error?
+// }
 
 const installOhmyzsh = async () => {
   try {
@@ -31,7 +31,7 @@ const installOhmyzsh = async () => {
     }
   } catch (error) {
     reportError('Problem installing oh-my-zsh', error)
-    exit(1)
+    process.exit(1)
   }
 }
 
@@ -53,12 +53,12 @@ const installP10K = async () => {
     }
   } catch (error) {
     reportError('Problem installing powerlevel10k', error)
-    exit(1)
+    process.exit(1)
   }
 }
 
 const runTasks = async () => {
-  const isSpin = !!process.env.SPIN
+  // const isSpin = !!process.env.SPIN
 
   await installOhmyzsh()
   await installP10K()
