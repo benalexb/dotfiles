@@ -2,6 +2,8 @@
 
 import { spinner } from 'zx/experimental'
 
+const GIT_USER_NAME = 'Benjamin Barreto'
+const GIT_USER_EMAIL = 'benjamin.barreto@shopify.com'
 const CONFIG_FILES = [
   '.zshrc',
   '.aliases',
@@ -139,20 +141,6 @@ const installZSHPlugins = async () => {
   }
 }
 
-const setupConfigFiles = async () => {
-  try {
-    for (const fileName of CONFIG_FILES) {
-      const target = path.join(os.homedir(), fileName)
-      const file = path.join(os.homedir(), 'dotfiles', 'config', fileName)
-      await backup(target)
-      await symlink(file, target)
-    }
-  } catch (error) {
-    reportError('Problem setting up config files', error)
-    process.exit(1)
-  }
-}
-
 const installCargo = async () => {
   try {
     // Using which.sync because async will not recognize nothrow: true (maybe a bug?)
@@ -185,15 +173,56 @@ const installGitDelta = async () => {
   }
 }
 
+const setupConfigFiles = async () => {
+  try {
+    for (const fileName of CONFIG_FILES) {
+      const target = path.join(os.homedir(), fileName)
+      const file = path.join(os.homedir(), 'dotfiles', 'config', fileName)
+      await backup(target)
+      await symlink(file, target)
+    }
+  } catch (error) {
+    reportError('Problem setting up config files', error)
+    process.exit(1)
+  }
+}
+
+const setupGitConfig = async () => {
+  try {
+    const deltaConfig = path.join(os.homedir(), 'dotfiles', 'config', 'delta.gitconfig')
+    const deltaThemesConfig = path.join(os.homedir(), 'dotfiles', 'config', 'delta-themes.gitconfig')
+    const installMessage = '-> Setting git configs... '
+    await spinner(infoText(installMessage), async () => {
+      await $`git config --global user.name ${GIT_USER_NAME}`
+      await $`git config --global user.email ${GIT_USER_EMAIL}`
+      await $`git config --global core.editor "code -w"`
+      await $`git config --global core.pager "delta"`
+      await $`git config --global init.defaultbranch "master"`
+      await $`git config --global interactive.difffilter "delta --color-only --features=interactive"`
+      await $`git config --global --add include.path ${deltaConfig}`
+      await $`git config --global --add include.path ${deltaThemesConfig}`
+    })
+    console.log(infoText(installMessage), positiveText('Done'))
+  } catch (error) {
+    reportError('Problem setting up git configs', error)
+    process.exit(1)
+  }
+}
+
 const runTasks = async () => {
-  // const isSpin = !!process.env.SPIN
+  const isSpin = !!process.env.SPIN
 
   await installOhmyzsh()
   await installP10K()
   await installZSHPlugins()
-  await setupConfigFiles()
   await installCargo()
   await installGitDelta()
+  await setupConfigFiles()
+  await setupGitConfig()
+
+  if (!isSpin) {
+    // await $`exec zsh`
+  }
 }
 
 runTasks()
