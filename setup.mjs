@@ -19,9 +19,9 @@ const positiveText = chalk.bold.green
 // Set verbosity to silent. Default is true. Verbosity may be useful for development.
 $.verbose = false
 
-const reportError = (message, error = new Error()) => {
+const reportError = (message, error) => {
   console.log(errorText(message))
-  console.error(error)
+  error && console.error(error)
 }
 
 const getFileLinkStats = async (path) => {
