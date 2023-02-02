@@ -76,12 +76,9 @@ const installOhmyzsh = async () => {
       return
     }
 
-    const installMessage = '-> Installing oh-my-zsh... '
-    await spinner(
-      infoText(installMessage),
-      () => $`sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"`
-    )
-    console.log(infoText(installMessage), positiveText('Done'))
+    await $`sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"`
+
+    console.log(infoText('-> Installing oh-my-zsh... '), positiveText('✅'))
   } catch (error) {
     reportError('Problem installing oh-my-zsh', error)
     process.exit(1)
@@ -103,7 +100,7 @@ const installP10K = async () => {
       infoText(installMessage),
       () => $`git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${p10kPath}`
     )
-    console.log(infoText(installMessage), positiveText('Done'))
+    console.log(infoText(installMessage), positiveText('✅'))
   } catch (error) {
     reportError('Problem installing powerlevel10k', error)
     process.exit(1)
@@ -117,7 +114,7 @@ const installPlugin = async (pluginName, pluginDir, pluginRepo) => {
   } else {
     const installMessage = `-> Installing ${pluginName}... `
     await spinner(infoText(installMessage), () => $`git clone ${pluginRepo} ${pluginDir}`)
-    console.log(infoText(installMessage), positiveText('Done'))
+    console.log(infoText(installMessage), positiveText('✅'))
   }
 }
 
@@ -144,21 +141,39 @@ const installZSHPlugins = async () => {
   }
 }
 
+const installGitDeltaLinux = async () => {
+  await spinner(
+    infoText('-> Installing git-delta on OSX... '),
+    () => $`cargo install git-delta`
+  )
+}
+
+const installGitDeltaOSX = async () => {
+  await spinner(
+    infoText('-> Installing git-delta on OSX... '),
+    () => $`brew install git-delta --quiet`
+  )
+}
+
 const installGitDelta = async () => {
   try {
     // Using which.sync because async will not recognize nothrow: true (maybe a bug?)
-    // We do not want to throw when the command doesn't exist, but rather, take action on it.
+    // We don't wanna throw when the command doesn't exist, but rather, take action on it.
     const hasDelta = which.sync('delta', { nothrow: true })
+    const isOSX = which.sync('brew', { nothrow: true })
 
     if (hasDelta || SPIN) {
       console.log(warningText('Skipping git-delta, already installed!'))
       return
     }
 
-    const installMessage = '-> Installing git-delta... '
-    const installCommand = 'brew install git-delta --quiet'
-    await spinner(infoText(installMessage), () => $`${installCommand}`)
-    console.log(infoText(installMessage), positiveText('Done'))
+    if (isOSX) {
+      await installGitDeltaOSX()
+    } else {
+      await installGitDeltaLinux()
+    }
+
+    console.log(infoText('-> Installing git-delta... '), positiveText('✅'))
   } catch (error) {
     reportError('Problem installing git-delta', error)
     process.exit(1)
@@ -194,7 +209,7 @@ const setupGitConfig = async () => {
       await $`git config --global --add include.path ${deltaConfig}`
       await $`git config --global --add include.path ${deltaThemesConfig}`
     })
-    console.log(infoText(installMessage), positiveText('Done'))
+    console.log(infoText(installMessage), positiveText('✅'))
   } catch (error) {
     reportError('Problem setting up git configs', error)
     process.exit(1)

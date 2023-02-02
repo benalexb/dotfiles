@@ -28,3 +28,10 @@ export EDITOR="vim"
 if [ "$SPIN" ] && ( ! command -v -- "delta" > /dev/null; ) && ( command -v -- "nix-env" > /dev/null; ); then
   nix-env -iA nixpkgs.delta
 fi
+
+# NVM (but only if not on spin)
+if ! [ "$SPIN" ]; then
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+fi
