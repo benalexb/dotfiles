@@ -48,14 +48,16 @@ create_symlink "$HOME/dotfiles/config/common/.aliases" "$HOME/.aliases"
 create_symlink "$HOME/dotfiles/config/common/.p10k.zsh" "$HOME/.p10k.zsh"
 
 # 6. Create symlink for .zshrc
-create_symlink "$HOME/dotfiles/config/shopify/spin/.zshrc" "$HOME/.zshrc"
+create_symlink "$HOME/dotfiles/config/shopify/osx/.zshrc" "$HOME/.zshrc"
 
 # 7. Set up git configs
 git config --global user.name "Benjamin Barreto"
 git config --global user.email "benjamin.barreto@shopify.com"
-git config --global core.editor "vim"
+git config --global core.editor "code -w"
 git config --global core.pager "delta"
 git config --global init.defaultbranch "master"
 git config --global interactive.difffilter "delta --color-only --features=interactive"
 git config --global --add include.path "${HOME}/dotfiles/config/common/delta.gitconfig"
 git config --global --add include.path "${HOME}/dotfiles/config/common/delta-themes.gitconfig"
+
+exec zsh
