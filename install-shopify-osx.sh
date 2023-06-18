@@ -26,6 +26,32 @@ clone_and_replace() {
   git clone "$repo" "$target_dir"
 }
 
+# Install fonts located in ~/dotfiles/fonts on macOS, skipping duplicates.
+install_fonts() {
+    local fonts_dir="$HOME/dotfiles/fonts"
+
+    if [[ ! -d "$fonts_dir" ]]; then
+        echo "Fonts directory not found: $fonts_dir"
+        return 1
+    fi
+
+    find "$fonts_dir" -type f \( -iname "*.ttf" -o -iname "*.otf" \) -print0 | while IFS= read -r -d '' font; do
+        local font_file=$(basename "$font")
+        local target_font="$HOME/Library/Fonts/$font_file"
+
+        if [[ -e "$target_font" ]]; then
+            echo "Skipping font: $font_file (already installed)"
+        else
+            cp "$font" "$HOME/Library/Fonts/"
+            echo "Installed font: $font_file"
+        fi
+    done
+
+    echo "Fonts installation completed!"
+}
+
+install_fonts
+
 # Change to the home directory
 cd $HOME
 
