@@ -22,3 +22,11 @@ export NVM_DIR="$HOME/.nvm"
 
 # Python Symlinks
 export PATH="/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"
+
+# pnpm
+export PNPM_HOME="/Users/ben/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
