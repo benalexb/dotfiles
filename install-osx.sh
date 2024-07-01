@@ -79,7 +79,7 @@ create_symlink "$HOME/dotfiles/config/osx/.zshrc" "$HOME/.zshrc"
 # 7. Set up git configs
 git config --global user.name "Benjamin Barreto"
 git config --global user.email "benalexb@gmail.com"
-git config --global core.editor "code -w"
+git config --global core.editor "vim"
 git config --global core.pager "delta"
 git config --global init.defaultbranch "master"
 git config --global interactive.difffilter "delta --color-only --features=interactive"
