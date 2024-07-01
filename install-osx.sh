@@ -69,9 +69,10 @@ clone_and_replace "https://github.com/zsh-users/zsh-syntax-highlighting.git" "$H
 # 4. Install zsh-autosuggestions
 clone_and_replace "https://github.com/zsh-users/zsh-autosuggestions" "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
 
-# 5. Create symlinks for .aliases and .p10k.zsh
+# 5. Create symlinks for .aliases .p10k.zsh .vimrc
 create_symlink "$HOME/dotfiles/config/common/.aliases" "$HOME/.aliases"
 create_symlink "$HOME/dotfiles/config/common/.p10k.zsh" "$HOME/.p10k.zsh"
+create_symlink "$HOME/dotfiles/config/common/.vimrc" "$HOME/.vimrc"
 
 # 6. Create symlink for .zshrc
 create_symlink "$HOME/dotfiles/config/osx/.zshrc" "$HOME/.zshrc"

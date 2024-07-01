@@ -26,6 +26,32 @@ clone_and_replace() {
   git clone "$repo" "$target_dir"
 }
 
+# Install fonts located in ~/dotfiles/fonts on macOS, skipping duplicates.
+install_fonts() {
+    local fonts_dir="$HOME/dotfiles/fonts"
+
+    if [[ ! -d "$fonts_dir" ]]; then
+        echo "Fonts directory not found: $fonts_dir"
+        return 1
+    fi
+
+    find "$fonts_dir" -type f \( -iname "*.ttf" -o -iname "*.otf" \) -print0 | while IFS= read -r -d '' font; do
+        local font_file=$(basename "$font")
+        local target_font="$HOME/.local/share/fonts/$font_file"
+
+        if [[ -e "$target_font" ]]; then
+            echo "Skipping font: $font_file (already installed)"
+        else
+            cp "$font" "$target_font"
+            echo "Installed font: $font_file"
+        fi
+    done
+
+    echo "Fonts installation completed!"
+}
+
+install_fonts
+
 # Change to the home directory
 cd $HOME
 
@@ -43,9 +69,10 @@ clone_and_replace "https://github.com/zsh-users/zsh-syntax-highlighting.git" "$H
 # 4. Install zsh-autosuggestions
 clone_and_replace "https://github.com/zsh-users/zsh-autosuggestions" "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
 
-# 5. Create symlinks for .aliases and .p10k.zsh
+# 5. Create symlinks for .aliases .p10k.zsh .vimrc
 create_symlink "$HOME/dotfiles/config/common/.aliases" "$HOME/.aliases"
 create_symlink "$HOME/dotfiles/config/common/.p10k.zsh" "$HOME/.p10k.zsh"
+create_symlink "$HOME/dotfiles/config/common/.vimrc" "$HOME/.vimrc"
 
 # 6. Create symlink for .zshrc
 create_symlink "$HOME/dotfiles/config/debian/.zshrc" "$HOME/.zshrc"
@@ -53,9 +80,11 @@ create_symlink "$HOME/dotfiles/config/debian/.zshrc" "$HOME/.zshrc"
 # 7. Set up git configs
 git config --global user.name "Benjamin Barreto"
 git config --global user.email "benalexb@gmail.com"
-git config --global core.editor "code -w"
+git config --global core.editor "vim"
 git config --global core.pager "delta"
 git config --global init.defaultbranch "master"
 git config --global interactive.difffilter "delta --color-only --features=interactive"
 git config --global --add include.path "${HOME}/dotfiles/config/common/delta.gitconfig"
 git config --global --add include.path "${HOME}/dotfiles/config/common/delta-themes.gitconfig"
+
+exec zsh
