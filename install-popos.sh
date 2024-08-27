@@ -49,13 +49,18 @@ install_fonts() {
     mkdir -p "$LOCAL_FONT_DIR"
 
     local font_count=0
+
+    # Loop through each font and copy it
     find "$FONTS_SOURCE_DIR" -type f \( -iname "*.ttf" -o -iname "*.otf" \) | while read -r font; do
         local target_font="$LOCAL_FONT_DIR/$(basename "$font")"
 
         if [ ! -e "$target_font" ]; then
-            cp "$font" "$target_font"
-            log INFO "Installed font: $(basename "$font")"
-            ((font_count++))
+            if cp "$font" "$target_font"; then
+                log INFO "Installed font: $(basename "$font")"
+                ((font_count++))
+            else
+                log ERROR "Failed to install font: $(basename "$font")"
+            fi
         else
             log INFO "Skipping font: $(basename "$font") (already installed)"
         fi
