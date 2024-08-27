@@ -44,7 +44,7 @@ clone_or_update_repo() {
 
 # Function to install fonts, skipping duplicates
 install_fonts() {
-    log INFO "Installing fonts from $FONT_DIR to $LOCAL_FONT_DIR"
+    log INFO "Starting font installation..."
     mkdir -p "$LOCAL_FONT_DIR"
 
     if [ ! -d "$FONT_DIR" ]; then
@@ -66,7 +66,14 @@ install_fonts() {
     done
 
     fc-cache -fv "$LOCAL_FONT_DIR"
-    log INFO "Installed $font_count fonts. Fonts installation completed!"
+
+    if [ "$font_count" -gt 0 ]; then
+        log INFO "$font_count fonts installed successfully."
+    else
+        log INFO "No new fonts were installed."
+    fi
+
+    log INFO "Font installation completed!"
 }
 
 # Function to ensure zsh is installed
