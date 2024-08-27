@@ -136,4 +136,23 @@ main() {
     install_zsh_plugins_and_themes
 
     create_symlink "$HOME/dotfiles/config/common/.aliases" "$HOME/.aliases"
-    cre
+    create_symlink "$HOME/dotfiles/config/common/.p10k.zsh" "$HOME/.p10k.zsh"
+    create_symlink "$HOME/dotfiles/config/common/.vimrc" "$HOME/.vimrc"
+    create_symlink "$HOME/dotfiles/config/debian/.zshrc" "$HOME/.zshrc"
+
+    setup_git_config
+
+    if [ -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]; then
+        log INFO "Sourcing Oh My Zsh..."
+        source "$HOME/.oh-my-zsh/oh-my-zsh.sh"
+    else
+        log ERROR "Oh My Zsh installation seems to have failed."
+        exit 1
+    fi
+
+    log INFO "Setup completed. Starting zsh..."
+    exec zsh
+}
+
+# Run the main function
+main
