@@ -3,7 +3,6 @@ set -euo pipefail
 
 # Constants
 ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
-FONT_DIR="$HOME/env/fonts"
 LOCAL_FONT_DIR="$HOME/.local/share/fonts"
 
 # Log function to standardize output
@@ -42,18 +41,14 @@ clone_or_update_repo() {
     fi
 }
 
-# Function to install fonts, skipping duplicates
+# Function to install fonts to ~/.local/share/fonts
 install_fonts() {
     log INFO "Starting font installation..."
+
     mkdir -p "$LOCAL_FONT_DIR"
 
-    if [ ! -d "$FONT_DIR" ]; then
-        log ERROR "Fonts directory not found: $FONT_DIR"
-        return 1
-    fi
-
     local font_count=0
-    find "$FONT_DIR" -type f \( -iname "*.ttf" -o -iname "*.otf" \) | while read -r font; do
+    find "$HOME/env/fonts" -type f \( -iname "*.ttf" -o -iname "*.otf" \) | while read -r font; do
         local target_font="$LOCAL_FONT_DIR/$(basename "$font")"
 
         if [ ! -e "$target_font" ]; then
