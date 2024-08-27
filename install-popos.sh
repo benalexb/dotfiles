@@ -4,6 +4,7 @@ set -euo pipefail
 # Constants
 ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
 LOCAL_FONT_DIR="$HOME/.local/share/fonts"
+FONTS_SOURCE_DIR="$HOME/dotfiles/fonts"
 
 # Log function to standardize output
 log() {
@@ -43,12 +44,12 @@ clone_or_update_repo() {
 
 # Function to install fonts to ~/.local/share/fonts
 install_fonts() {
-    log INFO "Starting font installation..."
+    log INFO "Starting font installation from $FONTS_SOURCE_DIR..."
 
     mkdir -p "$LOCAL_FONT_DIR"
 
     local font_count=0
-    find "$HOME/env/fonts" -type f \( -iname "*.ttf" -o -iname "*.otf" \) | while read -r font; do
+    find "$FONTS_SOURCE_DIR" -type f \( -iname "*.ttf" -o -iname "*.otf" \) | while read -r font; do
         local target_font="$LOCAL_FONT_DIR/$(basename "$font")"
 
         if [ ! -e "$target_font" ]; then
@@ -114,8 +115,8 @@ setup_git_config() {
     git config --global core.pager "delta"
     git config --global init.defaultbranch "master"
     git config --global interactive.difffilter "delta --color-only --features=interactive"
-    git config --global --add include.path "${HOME}/env/config/common/delta.gitconfig"
-    git config --global --add include.path "${HOME}/env/config/common/delta-themes.gitconfig"
+    git config --global --add include.path "${HOME}/dotfiles/config/common/delta.gitconfig"
+    git config --global --add include.path "${HOME}/dotfiles/config/common/delta-themes.gitconfig"
 }
 
 # Main function to coordinate the setup
@@ -127,10 +128,10 @@ main() {
     install_fonts
     install_zsh_plugins_and_themes
 
-    create_symlink "$HOME/env/config/common/.aliases" "$HOME/.aliases"
-    create_symlink "$HOME/env/config/common/.p10k.zsh" "$HOME/.p10k.zsh"
-    create_symlink "$HOME/env/config/common/.vimrc" "$HOME/.vimrc"
-    create_symlink "$HOME/env/config/debian/.zshrc" "$HOME/.zshrc"
+    create_symlink "$HOME/dotfiles/config/common/.aliases" "$HOME/.aliases"
+    create_symlink "$HOME/dotfiles/config/common/.p10k.zsh" "$HOME/.p10k.zsh"
+    create_symlink "$HOME/dotfiles/config/common/.vimrc" "$HOME/.vimrc"
+    create_symlink "$HOME/dotfiles/config/debian/.zshrc" "$HOME/.zshrc"
 
     setup_git_config
 
