@@ -59,9 +59,7 @@ install_zsh() {
   if ! command -v zsh > /dev/null 2>&1; then
     echo "zsh could not be found. Installing zsh..."
     if [ "$OSTYPE" = "linux-gnu" ]; then
-      sudo apt-get update && sudo apt-get install -y zsh
-    elif [ "$OSTYPE" = "darwin" ]; then
-      brew install zsh
+      sudo apt update && sudo apt install -y zsh
     else
       echo "Unsupported OS. Please install zsh manually."
       exit 1
@@ -121,4 +119,3 @@ fi
 
 # Start zsh
 exec zsh
-
