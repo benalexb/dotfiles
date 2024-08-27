@@ -142,7 +142,7 @@ main() {
     create_symlink "$HOME/dotfiles/config/common/.aliases" "$HOME/.aliases" || return 1
     create_symlink "$HOME/dotfiles/config/common/.p10k.zsh" "$HOME/.p10k.zsh" || return 1
     create_symlink "$HOME/dotfiles/config/common/.vimrc" "$HOME/.vimrc" || return 1
-    create_symlink "$HOME/dotfiles/config/debian/.zshrc" "$HOME/.zshrc" || return 1
+    create_symlink "$HOME/dotfiles/config/popos/.zshrc" "$HOME/.zshrc" || return 1
 
     setup_git_config || return 1
 
