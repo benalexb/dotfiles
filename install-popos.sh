@@ -50,19 +50,21 @@ install_fonts() {
 
     local font_count=0
 
-    # Loop through each font and copy it
-    find "$FONTS_SOURCE_DIR" -type f \( -iname "*.ttf" -o -iname "*.otf" \) | while read -r font; do
-        local target_font="$LOCAL_FONT_DIR/$(basename "$font")"
+    # Loop through each font file and copy it
+    for font in "$FONTS_SOURCE_DIR"/*/*.{ttf,otf}; do
+        if [ -f "$font" ]; then
+            local target_font="$LOCAL_FONT_DIR/$(basename "$font")"
 
-        if [ ! -e "$target_font" ]; then
-            if cp "$font" "$target_font"; then
-                log INFO "Installed font: $(basename "$font")"
-                ((font_count++))
+            if [ ! -e "$target_font" ]; then
+                if cp "$font" "$target_font"; then
+                    log INFO "Installed font: $(basename "$font")"
+                    ((font_count++))
+                else
+                    log ERROR "Failed to install font: $(basename "$font")"
+                fi
             else
-                log ERROR "Failed to install font: $(basename "$font")"
+                log INFO "Skipping font: $(basename "$font") (already installed)"
             fi
-        else
-            log INFO "Skipping font: $(basename "$font") (already installed)"
         fi
     done
 
@@ -134,23 +136,4 @@ main() {
     install_zsh_plugins_and_themes
 
     create_symlink "$HOME/dotfiles/config/common/.aliases" "$HOME/.aliases"
-    create_symlink "$HOME/dotfiles/config/common/.p10k.zsh" "$HOME/.p10k.zsh"
-    create_symlink "$HOME/dotfiles/config/common/.vimrc" "$HOME/.vimrc"
-    create_symlink "$HOME/dotfiles/config/debian/.zshrc" "$HOME/.zshrc"
-
-    setup_git_config
-
-    if [ -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]; then
-        log INFO "Sourcing Oh My Zsh..."
-        source "$HOME/.oh-my-zsh/oh-my-zsh.sh"
-    else
-        log ERROR "Oh My Zsh installation seems to have failed."
-        exit 1
-    fi
-
-    log INFO "Setup completed. Starting zsh..."
-    exec zsh
-}
-
-# Run the main function
-main
+    cre
