@@ -15,10 +15,16 @@ export EDITOR="vim"
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+# OSX Speficic Aliases
+alias chromedev="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --incognito"
+
 # NVM
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Conda
+source ~/miniconda3/etc/profile.d/conda.sh
 
 # Python Symlinks
 export PATH="/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"
@@ -32,3 +38,9 @@ esac
 # pnpm end
 
 export GPG_TTY=$(tty)
+
+export GITHUB_TOKEN=***REMOVED***
+
+# Created by `pipx` on 2024-09-25 19:56:29
+export PATH="$PATH:/Users/ben/.local/bin"
+

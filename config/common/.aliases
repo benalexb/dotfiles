@@ -1,4 +1,4 @@
-alias ll='ls -ahlFG'
+alias ll="ls -ahlFG"
 
 # Get External IP / Internet Speed
 alias myip="curl https://ipinfo.io/json" # or /ip for plain-text ip
