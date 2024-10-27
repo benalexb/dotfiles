@@ -16,12 +16,16 @@ export EDITOR="vim"
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # OSX Speficic Aliases
-alias chromedev="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --incognito"
+alias chromedev='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --incognito > /dev/null 2>&1 &'
 
 # NVM
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Go
+export GOROOT=/usr/local/go
+export PATH=$PATH:$GOROOT/bin
 
 # Conda
 source ~/miniconda3/etc/profile.d/conda.sh
