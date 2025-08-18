@@ -48,3 +48,5 @@ export GITHUB_TOKEN=***REMOVED***
 # Created by `pipx` on 2024-09-25 19:56:29
 export PATH="$PATH:/Users/ben/.local/bin"
 
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
