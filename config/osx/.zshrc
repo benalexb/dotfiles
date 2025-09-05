@@ -15,7 +15,7 @@ export EDITOR="vim"
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# OSX Speficic Aliases
+# OSX Specific Aliases
 alias chromedev='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --incognito > /dev/null 2>&1 &'
 
 # NVM
@@ -26,12 +26,6 @@ export NVM_DIR="$HOME/.nvm"
 # Go
 export GOROOT=/usr/local/go
 export PATH=$PATH:$GOROOT/bin
-
-# Conda
-source ~/miniconda3/etc/profile.d/conda.sh
-
-# Python Symlinks
-export PATH="/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"
 
 # pnpm
 export PNPM_HOME="/Users/ben/Library/pnpm"
@@ -44,9 +38,3 @@ esac
 export GPG_TTY=$(tty)
 
 export GITHUB_TOKEN=***REMOVED***
-
-# Created by `pipx` on 2024-09-25 19:56:29
-export PATH="$PATH:/Users/ben/.local/bin"
-
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"

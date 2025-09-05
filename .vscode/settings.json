@@ -1,13 +1,16 @@
 {
   "cSpell.words": [
+    "chromedev",
     "citc",
     "colormap",
     "direnv",
     "fluxctl",
     "gemset",
+    "gitfast",
     "GITSTATUS",
     "gitstatusd",
     "goenv",
+    "GOROOT",
     "istioctl",
     "jenv",
     "kogito",
