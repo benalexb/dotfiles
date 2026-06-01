@@ -1,6 +1,6 @@
 # dotfiles
 
-Personal macOS dotfiles for shell, git, fonts, and iTerm2.
+Personal macOS dotfiles for shell, git, fonts, and iTerm2. (maybe also linux in the future)
 
 ## Prerequisites
 
