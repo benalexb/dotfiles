@@ -38,4 +38,12 @@ esac
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-export GPG_TTY=$(tty)
+autoload -Uz add-zsh-hook
+gpg_tty() {
+  local tty_path
+  tty_path=$(tty 2>/dev/null) || return
+  [[ "$tty_path" == not\ a\ tty ]] && return
+  export GPG_TTY="$tty_path"
+}
+add-zsh-hook precmd gpg_tty
+gpg_tty
