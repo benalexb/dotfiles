@@ -58,24 +58,39 @@ require_command() {
   fi
 }
 
-load_env() {
-  CURRENT_STEP="load environment"
-  if [[ -f "$HOME/.env" ]]; then
-    set -a
-    # shellcheck source=/dev/null
-    source "$HOME/.env"
-    set +a
-    return
+ensure_env_file() {
+  local env_file="$DOTFILES_DIR/.env"
+
+  if [[ -f "$env_file" ]]; then
+    return 0
   fi
 
-  if [[ -f "$DOTFILES_DIR/.env.example" ]]; then
-    cp "$DOTFILES_DIR/.env.example" "$HOME/.env"
-    log WARN "Created ~/.env from .env.example — edit it with your values"
-    set -a
-    # shellcheck source=/dev/null
-    source "$HOME/.env"
-    set +a
+  if [[ ! -f "$DOTFILES_DIR/.env.example" ]]; then
+    log WARN "No .env file found at ${env_file}"
+    return 1
   fi
+
+  cp "$DOTFILES_DIR/.env.example" "$env_file"
+  log WARN "Created ${env_file} from .env.example — edit it with your values"
+}
+
+link_env() {
+  ensure_env_file || return 0
+  create_symlink "$DOTFILES_DIR/.env" "$HOME/.env"
+}
+
+load_env() {
+  CURRENT_STEP="load environment"
+  link_env
+
+  if [[ ! -f "$HOME/.env" ]]; then
+    return 0
+  fi
+
+  set -a
+  # shellcheck source=/dev/null
+  source "$HOME/.env"
+  set +a
 }
 
 create_symlink() {
@@ -85,6 +100,10 @@ create_symlink() {
   if [[ ! -e "$source" ]]; then
     log ERROR "Symlink source not found: $source"
     return 1
+  fi
+
+  if [[ -L "$target" ]] && [[ "$(readlink "$target")" == "$source" ]]; then
+    return 0
   fi
 
   if [[ -e "$target" || -L "$target" ]]; then
@@ -215,6 +234,7 @@ setup_git_config() {
 
 link_dotfiles() {
   CURRENT_STEP="link dotfiles"
+  link_env
   create_symlink "$DOTFILES_DIR/config/common/.aliases" "$HOME/.aliases"
   create_symlink "$DOTFILES_DIR/config/common/.p10k.zsh" "$HOME/.p10k.zsh"
   create_symlink "$DOTFILES_DIR/config/common/.vimrc" "$HOME/.vimrc"

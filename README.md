@@ -17,10 +17,16 @@ git clone <repo-url> ~/dotfiles
 1. Create your local environment file:
 
 ```bash
-cp ~/dotfiles/.env.example ~/.env
+cp ~/dotfiles/.env.example ~/dotfiles/.env
 ```
 
-Edit `~/.env` with your name, email, and any secrets (e.g. `GITHUB_TOKEN`).
+Edit `~/dotfiles/.env` with your name, email, and any secrets (e.g. `GITHUB_TOKEN`).
+
+The install script symlinks `~/.env` to `~/dotfiles/.env`. To create the symlink manually:
+
+```bash
+ln -sf ~/dotfiles/.env ~/.env
+```
 
 2. Run the install script:
 
@@ -42,7 +48,7 @@ Install options:
 5. [git-delta](https://dandavison.github.io/delta/introduction.html) (via Homebrew)
 6. JetBrains Mono Nerd Font Mono variants
 7. Personal aliases, vim config, and git delta config
-8. Symlinks for `.zshrc`, `.zprofile`, `.aliases`, `.p10k.zsh`, and `.vimrc`
+8. Symlinks for `.env`, `.zshrc`, `.zprofile`, `.aliases`, `.p10k.zsh`, and `.vimrc`
 
 ## iTerm2
 
@@ -61,7 +67,8 @@ Editor settings are managed with Cursor's built-in Settings Sync, not this repo.
 ## Secrets
 
 - Tracked template: `.env.example`
-- Local secrets: `~/.env` (gitignored, loaded by `.zshrc` and `install-osx.sh`)
+- Local secrets: `~/dotfiles/.env` (gitignored), symlinked to `~/.env` for shell loading
+- Loaded by `.zshrc` and `install-osx.sh` via `~/.env`
 - Never commit real tokens or credentials
 
 If tokens were ever committed, revoke them on GitHub and scrub git history before pushing.
