@@ -1,0 +1,3 @@
+# Fedora/Linux-specific aliases
+alias ll='ls -ahlF --color=auto'
+alias chrome='google-chrome --incognito'

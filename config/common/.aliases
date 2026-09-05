@@ -1,5 +1,4 @@
-alias ll='ls -ahlFG'
-alias chrome='open -na "Google Chrome" --args --incognito'
+alias ll='ls -ahlF'
 
 # Get External IP / Internet Speed
 alias myip='curl https://ipinfo.io/json' # or /ip for plain-text ip

@@ -130,13 +130,15 @@ clone_or_update_repo() {
 install_fonts() {
   CURRENT_STEP="install fonts"
   local fonts_dir="$DOTFILES_DIR/fonts/JetBrainsMono"
-  local target_fonts_dir="$HOME/Library/Fonts"
+  local target_fonts_dir="$HOME/.local/share/fonts/JetBrainsMono"
   local font_count=0
 
   if [[ ! -d "$fonts_dir" ]]; then
     log WARN "Font directory not found: $fonts_dir"
     return 0
   fi
+
+  mkdir -p "$target_fonts_dir"
 
   shopt -s nullglob
   for font in "$fonts_dir"/JetBrainsMonoNerdFontMono-*.ttf; do
@@ -151,6 +153,10 @@ install_fonts() {
     ((font_count++)) || true
   done
   shopt -u nullglob
+
+  if [[ "$font_count" -gt 0 ]]; then
+    fc-cache -f "$target_fonts_dir"
+  fi
 
   log INFO "${font_count} fonts installed"
 }
@@ -174,22 +180,33 @@ install_zsh_plugins_and_themes() {
   clone_or_update_repo "https://github.com/zsh-users/zsh-autosuggestions.git" "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
 }
 
-install_brew_packages() {
-  CURRENT_STEP="install brew packages"
-  if ! command -v brew &>/dev/null; then
-    log WARN "Homebrew not found — skipping brew package installation"
+install_dnf_packages() {
+  CURRENT_STEP="install dnf packages"
+  require_command dnf
+
+  local packages=(zsh git-delta vim curl git)
+
+  log INFO "Installing packages via dnf: ${packages[*]}"
+  sudo dnf install -y "${packages[@]}"
+}
+
+set_default_shell() {
+  CURRENT_STEP="set default shell"
+  local zsh_path
+  zsh_path="$(command -v zsh)"
+
+  if [[ "$SHELL" == "$zsh_path" ]]; then
+    log INFO "Default shell is already zsh"
     return 0
   fi
 
-  if ! brew list git-delta &>/dev/null; then
-    brew install git-delta
-  else
-    log INFO "git-delta already installed"
+  if ! grep -Fxq "$zsh_path" /etc/shells; then
+    log ERROR "${zsh_path} is not listed in /etc/shells"
+    return 1
   fi
 
-  if [[ -f "$DOTFILES_DIR/Brewfile" ]]; then
-    brew bundle --file="$DOTFILES_DIR/Brewfile"
-  fi
+  log INFO "Changing default shell to zsh (may prompt for password)"
+  chsh -s "$zsh_path"
 }
 
 git_config_set_if_unset() {
@@ -236,11 +253,11 @@ link_dotfiles() {
   CURRENT_STEP="link dotfiles"
   link_env
   create_symlink "$DOTFILES_DIR/config/common/.aliases" "$HOME/.aliases"
-  create_symlink "$DOTFILES_DIR/config/osx/.aliases" "$HOME/.aliases.platform"
+  create_symlink "$DOTFILES_DIR/config/fedora/.aliases" "$HOME/.aliases.platform"
   create_symlink "$DOTFILES_DIR/config/common/.p10k.zsh" "$HOME/.p10k.zsh"
   create_symlink "$DOTFILES_DIR/config/common/.vimrc" "$HOME/.vimrc"
-  create_symlink "$DOTFILES_DIR/config/osx/.zprofile" "$HOME/.zprofile"
-  create_symlink "$DOTFILES_DIR/config/osx/.zshrc" "$HOME/.zshrc"
+  create_symlink "$DOTFILES_DIR/config/fedora/.zprofile" "$HOME/.zprofile"
+  create_symlink "$DOTFILES_DIR/config/fedora/.zshrc" "$HOME/.zshrc"
 }
 
 main() {
@@ -252,6 +269,8 @@ main() {
 
   load_env
 
+  install_dnf_packages
+
   if [[ "$SKIP_OMZ" == false ]]; then
     install_oh_my_zsh
     install_zsh_plugins_and_themes
@@ -262,8 +281,8 @@ main() {
   fi
 
   link_dotfiles
-  install_brew_packages
   setup_git_config
+  set_default_shell
 
   log INFO "Setup completed"
 

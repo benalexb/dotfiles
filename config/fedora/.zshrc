@@ -10,7 +10,7 @@ fi
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
-plugins=(gitfast git last-working-dir common-aliases sublime history-substring-search zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(gitfast git last-working-dir common-aliases history-substring-search zsh-autosuggestions zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
 [[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
@@ -24,12 +24,11 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-if command -v brew &>/dev/null; then
-  go_prefix="$(brew --prefix go 2>/dev/null)"
-  [[ -n "$go_prefix" && -d "$go_prefix/bin" ]] && export PATH="$go_prefix/bin:$PATH"
+if command -v go &>/dev/null; then
+  [[ -d "$HOME/go/bin" ]] && export PATH="$HOME/go/bin:$PATH"
 fi
 
-export PNPM_HOME="$HOME/Library/pnpm"
+export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;

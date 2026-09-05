@@ -1,0 +1,3 @@
+# macOS-specific aliases
+alias ll='ls -ahlFG'
+alias chrome='open -na "Google Chrome" --args --incognito'
