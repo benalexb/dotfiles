@@ -209,17 +209,12 @@ set_default_shell() {
   chsh -s "$zsh_path"
 }
 
-git_config_set_if_unset() {
+git_config_set() {
   local key=$1
   local value=$2
 
   if [[ -z "$value" ]]; then
     log WARN "Skipping git config ${key} — value not set in ~/.env"
-    return 0
-  fi
-
-  if git config --global --get "$key" &>/dev/null; then
-    log INFO "Git config ${key} already set"
     return 0
   fi
 
@@ -239,8 +234,8 @@ git_config_add_include_if_missing() {
 
 setup_git_config() {
   CURRENT_STEP="setup git config"
-  git_config_set_if_unset user.name "${GIT_USER_NAME:-}"
-  git_config_set_if_unset user.email "${GIT_USER_EMAIL:-}"
+  git_config_set user.name "${GIT_USER_NAME:-}"
+  git_config_set user.email "${GIT_USER_EMAIL:-}"
   git config --global core.editor "vim"
   git config --global core.pager "delta"
   git config --global init.defaultBranch "master"
