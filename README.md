@@ -1,6 +1,6 @@
 # dotfiles
 
-Personal dotfiles for macOS and Fedora Linux: shell, git, fonts, and iTerm2.
+Personal dotfiles for macOS and Fedora Linux: shell, git, fonts, and iTerm2, etc.
 
 ## Prerequisites
 
