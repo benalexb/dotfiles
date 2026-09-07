@@ -14,6 +14,7 @@
     "gsutil",
     "istioctl",
     "JENV",
+    "keyd",
     "kogito",
     "kubecontext",
     "kubectx",

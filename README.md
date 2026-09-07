@@ -52,9 +52,25 @@ Install options:
 5. [git-delta](https://dandavison.github.io/delta/introduction.html) (via Homebrew on macOS, `dnf` on Fedora)
 6. JetBrains Mono Nerd Font Mono variants
 7. Personal aliases (common + platform-specific), vim config, and git delta config
-8. Symlinks for `.env`, `.zshrc`, `.zprofile`, `.aliases`, `.aliases.platform`, `.p10k.zsh`, and `.vimrc`
+8. Symlinks for `.env`, `.zshrc`, `.zprofile`, `.aliases`, `.aliases.platform`, `.p10k.zsh`, `.vimrc`, and `~/.config/kitty`
+9. [keyd](https://github.com/rvaiya/keyd) (Fedora only) — Alt+Left/Right → Home/End; copied to `/etc/keyd/default.conf`
+10. [kitty](https://sw.kovidgoyal.net/kitty/) (Fedora only) — installed via `dnf` with the other Fedora packages
 
-On Fedora, the script also installs packages via `dnf` (zsh, git-delta, vim, curl, git) and sets zsh as the default shell via `chsh`. Fonts are installed to `~/.local/share/fonts` and indexed with `fc-cache`.
+On Fedora, the script also installs packages via `dnf` (zsh, git-delta, vim, curl, git, keyd, kitty) and sets zsh as the default shell via `chsh`. Fonts are installed to `~/.local/share/fonts` and indexed with `fc-cache`.
+
+### keyd (Fedora only)
+
+[keyd](https://github.com/rvaiya/keyd) remaps Alt+Left/Right to Home/End so line navigation matches macOS Cmd+Left/Right. Config lives in `config/fedora/keyd/default.conf` and is **copied** (not symlinked) to `/etc/keyd/default.conf` because that path is root-owned. Re-runs skip the copy when the file already matches; a differing file is backed up first (`*_bkup_<timestamp>`). Then `systemctl enable --now keyd`.
+
+If a bad config locks the keyboard, keyd's panic sequence is **backspace+escape+enter** — that terminates the daemon.
+
+### kitty (Fedora only)
+
+Config lives in `config/fedora/kitty/` and is **symlinked** to `~/.config/kitty` (user-owned path, same mechanism as `.zshrc` etc.). The whole directory is linked so theme files, sessions, and kittens stay tracked. A real directory at the destination is backed up first (`*_bkup_<timestamp>`).
+
+kitty is installed with `dnf` alongside the other Fedora packages (`dnf install -y` is a no-op if already present). Fedora package follows system updates; version may lag upstream.
+
+`current-theme.conf` is written by `kitty +kitten themes`. Runtime/cache junk (`*.bak`, `__pycache__`, `dump-bytes*`) is gitignored.
 
 ## iTerm2
 
@@ -91,6 +107,8 @@ dotfiles/
 │   ├── common/          # shared config (aliases, p10k, vim, git delta, iTerm2)
 │   ├── osx/             # macOS shell config (.zshrc, .zprofile, .aliases)
 │   └── fedora/          # Fedora shell config (.zshrc, .zprofile, .aliases)
+│       ├── keyd/        # keyd default.conf (copied to /etc/keyd/)
+│       └── kitty/       # kitty config (symlinked to ~/.config/kitty)
 └── fonts/
     └── JetBrainsMono/   # JetBrainsMonoNerdFontMono variants only
 ```

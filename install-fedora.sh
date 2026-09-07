@@ -184,7 +184,7 @@ install_dnf_packages() {
   CURRENT_STEP="install dnf packages"
   require_command dnf
 
-  local packages=(zsh git-delta vim curl git)
+  local packages=(zsh git-delta vim curl git keyd kitty)
 
   log INFO "Installing packages via dnf: ${packages[*]}"
   sudo dnf install -y "${packages[@]}"
@@ -244,6 +244,38 @@ setup_git_config() {
   git_config_add_include_if_missing "${DOTFILES_DIR}/config/common/delta-themes.gitconfig"
 }
 
+install_system_file() {
+  local source=$1
+  local target=$2
+
+  if [[ ! -e "$source" ]]; then
+    log ERROR "System file source not found: $source"
+    return 1
+  fi
+
+  sudo mkdir -p "$(dirname "$target")"
+
+  if sudo test -e "$target" || sudo test -L "$target"; then
+    if sudo cmp -s "$source" "$target"; then
+      log INFO "System file already up to date: ${target}"
+      return 0
+    fi
+
+    local backup="${target}_bkup_$(date +%Y%m%d%H%M%S)"
+    log INFO "Backing up existing ${target} to ${backup}"
+    sudo mv "$target" "$backup"
+  fi
+
+  sudo install -m 644 "$source" "$target"
+  log INFO "Installed ${target}"
+}
+
+setup_keyd() {
+  CURRENT_STEP="setup keyd"
+  install_system_file "$DOTFILES_DIR/config/fedora/keyd/default.conf" /etc/keyd/default.conf
+  sudo systemctl enable --now keyd
+}
+
 link_dotfiles() {
   CURRENT_STEP="link dotfiles"
   link_env
@@ -253,6 +285,8 @@ link_dotfiles() {
   create_symlink "$DOTFILES_DIR/config/common/.vimrc" "$HOME/.vimrc"
   create_symlink "$DOTFILES_DIR/config/fedora/.zprofile" "$HOME/.zprofile"
   create_symlink "$DOTFILES_DIR/config/fedora/.zshrc" "$HOME/.zshrc"
+  mkdir -p "$HOME/.config"
+  create_symlink "$DOTFILES_DIR/config/fedora/kitty" "$HOME/.config/kitty"
 }
 
 main() {
@@ -277,6 +311,7 @@ main() {
 
   link_dotfiles
   setup_git_config
+  setup_keyd
   set_default_shell
 
   log INFO "Setup completed"

@@ -1,0 +1,6 @@
+# Runtime / cache — not configuration
+*.bak
+*.tmp
+__pycache__/
+*.pyc
+dump-bytes*
